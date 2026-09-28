@@ -1,0 +1,46 @@
+header{
+    border-bottom: 3px solid gold;
+    display: flex;
+    justify-content: space-between;
+    
+}
+#capsalera{   
+     display: flex;
+     flex-direction: column;
+}
+#supdreta{
+    display: flex;
+    align-items: flex-start;
+    gap:15px
+}
+
+.idioma{
+    display: flex;
+    justify-content: flex-end;
+    align-items: end;
+    padding-top: 20px;
+}
+
+#inferiodreta{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    gap:15px;
+    padding-right: 10px;
+}
+
+#fotos{
+    display:flex;
+ flex-wrap: wrap;
+ justify-content: space-evenly;
+ align-items: stretch;
+align-content: stretch;
+padding-top: 50px;
+padding-bottom: 50px;
+
+}
+.cases{
+  flex-grow: 1;  
+  flex-basis: auto;
+margin: 30px;
+}

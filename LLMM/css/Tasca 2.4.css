@@ -1,0 +1,21 @@
+@font-face {
+    font-family: "Momo Signature";
+    src: url(Momo_Signature/MomoSignature-Regular.ttf) format ("truetype");
+}
+p.cursiva{
+    font-family: Momo Signature;
+    text-indent: 30px ;
+    text-align: justify;
+}
+p.inclinat{
+    font-family: Momo Signature;
+    text-indent: 30px ;
+    text-align: right;
+}
+p{
+    font-family: Momo Signature;
+    font-size: 2rem;
+    text-indent: 30px ;
+    text-align: center;
+    text-transform: uppercase;
+}

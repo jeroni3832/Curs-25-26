@@ -1,0 +1,69 @@
+.titol{
+    border: 5px solid goldenrod;
+    background-color: red;
+    margin: auto;
+    
+}
+#di-primer{
+    border: 3px solid goldenrod;
+    display: flex;
+    max-width: 100%;
+    height: auto;
+    justify-content: space-between;
+    flex-direction: row;
+}
+
+.fase{
+    max-width: 100%;
+    height: auto;
+    display: flex;
+    justify-content: flex-start;
+    }
+
+.pokenom{
+    max-width: 100%;
+    height: auto;
+    display:flex;
+    justify-content: center; 
+    padding-left: 100px ;
+    }
+
+.vida{
+    max-width: 100%;
+    height: auto;
+    display:flex;
+    justify-content: center; 
+    }
+
+#imagen{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    
+   
+
+}
+
+.pokemonImatge{
+    width: 100%;
+    border: 5px solid goldenrod;
+}
+
+#ataque{
+     display: flex;
+    justify-content: space-between;
+    
+}
+.icono{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.nomataque{
+     display: flex;
+    justify-content: center;
+    
+}
+
+

@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entrenador JS - Llenguatge de Marques</title>
+    <style>
+        :root{--bg:#0c1222;--bg2:#141e33;--bg3:#1a2744;--bg4:#223255;--bdr:#2a3a5c;--tx:#c8d6e5;--txd:#6b7b99;--acc:#0ea5e9;--acc-l:#38bdf8;--green:#22c55e;--yellow:#f59e0b;--red:#ef4444;--mono:'Consolas',monospace;}
+        *{box-sizing:border-box;margin:0;padding:0;}
+        body{background:var(--bg);color:var(--tx);font-family:system-ui,-apple-system,sans-serif;min-height:100vh;}
+        /* Capçalera i Pestanyes */
+        header{background:linear-gradient(135deg,var(--bg2),var(--bg3));border-bottom:1px solid var(--bdr);padding:1rem 1.5rem;}
+        .logo-text{font-size:1.2rem;color:var(--acc-l);font-weight:600;}
+        nav{background:var(--bg2);border-bottom:1px solid var(--bdr);padding:0 1.2rem;display:flex;overflow-x:auto;gap:5px;}
+        .tab-btn{background:none;border:none;border-bottom:3px solid transparent;color:var(--txd);cursor:pointer;font-size:0.9rem;padding:0.8rem 1rem;white-space:nowrap;transition:all 0.2s;font-weight:500;}
+        .tab-btn:hover{color:var(--tx);}
+        .tab-btn.active{color:var(--acc-l);border-bottom-color:var(--acc);background:rgba(14,165,233,.05);}
+        /* Contingut */
+        main{max-width:900px;margin:0 auto;padding:2rem 1rem;}
+        .header-topic h2{font-size:1.5rem;color:var(--tx);margin-bottom:1.5rem;}
+        /* Exercicis */
+        .exercise{background:var(--bg2);border:1px solid var(--bdr);border-radius:8px;margin-bottom:2rem;overflow:hidden;}
+        .ex-header{background:var(--bg3);padding:0.8rem 1.2rem;border-bottom:1px solid var(--bdr);display:flex;justify-content:space-between;align-items:center;}
+        .ex-title{font-weight:600;font-size:1rem;color:var(--tx);}
+        .dif-facil{color:var(--green);font-size:0.75rem;border:1px solid var(--green);padding:2px 8px;border-radius:12px;}
+        .dif-mitja{color:var(--yellow);font-size:0.75rem;border:1px solid var(--yellow);padding:2px 8px;border-radius:12px;}
+        .dif-dificil{color:var(--red);font-size:0.75rem;border:1px solid var(--red);padding:2px 8px;border-radius:12px;}
+        .ex-body{padding:1.5rem;}
+        .q-text{margin-bottom:1rem;font-size:0.95rem;line-height:1.6;}
+        .q-text code{background:var(--bg4);color:var(--acc-l);padding:2px 6px;border-radius:4px;font-family:var(--mono);font-size:0.85rem;}
+        .setup-code{background:var(--bg);padding:1rem;border-radius:6px;font-family:var(--mono);font-size:0.85rem;color:#86efac;margin-bottom:1rem;border:1px solid var(--bdr);overflow-x:auto;}
+        .code-editor{width:100%;min-height:100px;background:var(--bg);color:var(--acc-l);font-family:var(--mono);font-size:0.9rem;padding:1rem;border-radius:6px;border:1px solid var(--bdr);margin-bottom:1rem;resize:vertical;outline:none;}
+        .code-editor:focus{border-color:var(--acc);}
+        /* Botons d'acció */
+        .actions{display:flex;gap:1rem;}
+        .btn{padding:0.5rem 1rem;border:none;border-radius:6px;cursor:pointer;font-weight:600;font-size:0.85rem;transition:opacity 0.2s;}
+        .btn:hover{opacity:0.8;}
+        .btn-hint{background:transparent;border:1px solid var(--yellow);color:var(--yellow);}
+        .btn-solve{background:linear-gradient(135deg,var(--acc-d),var(--acc));color:#fff;}
+        /* Caixes de pistes i solucions */
+        .hidden-box{display:none;padding:1rem;border-radius:6px;margin-top:1rem;font-size:0.9rem;line-height:1.5;}
+        .hint-box{background:rgba(245,158,11,.1);border-left:4px solid var(--yellow);color:#fde68a;}
+        .solution-box{background:rgba(14,165,233,.1);border-left:4px solid var(--acc);color:var(--tx);}
+        .solution-box pre{font-family:var(--mono);font-size:0.85rem;margin-top:0.5rem;color:#e8f0ff;}
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo-text">📚 Simulador d'Estudi JS</div>
+</header>
+
+<nav id="main-nav">
+    <button class="tab-btn active" onclick="loadTopic('arrays', this)">1. Arrays i Mètodes</button>
+    <button class="tab-btn" onclick="loadTopic('dom', this)">2. DOM i Selecció</button>
+    <button class="tab-btn" onclick="loadTopic('events', this)">3. Events</button>
+    <button class="tab-btn" onclick="loadTopic('storage', this)">4. Web Storage</button>
+    <button class="tab-btn" onclick="loadTopic('funcions', this)">5. Funcions i Date</button>
+    <button class="tab-btn" onclick="loadTopic('fetch', this)">6. Fetch i Promeses</button>
+</nav>
+
+<main>
+    <div class="header-topic">
+        <h2 id="current-topic-title">Arrays i Mètodes</h2>
+    </div>
+    <div id="exercises-container">
+    </div>
+</main>
+
+<script>
+    // --- BASE DE DADES D'EXERCICIS ---
+    const db = {
+        "arrays": {
+            name: "Bloc 1: Lògica pura - Bucles i Condicions (45 Activitats)",
+            exercises: [
+                // ELS 15 ORIGINALS BÀSICS DE MÈTODES
+                { diff: "facil", title: "1. Crear i accedir", q: "Guarda el segon element de l'array a la variable <code>segon</code>.", setup: "const llista = ['A', 'B', 'C', 'D'];", hint: "L'índex és 1.", sol: "const segon = llista[1];" },
+                { diff: "facil", title: "2. Modificar", q: "Canvia 'Groc' per 'Verd'.", setup: "const colors = ['Vermell', 'Groc', 'Blau'];", hint: "colors[1] = ...", sol: "colors[1] = 'Verd';" },
+                { diff: "facil", title: "3. Longitud", q: "Guarda la longitud a <code>quantitat</code>.", setup: "const dades = [1, 2, 3];", hint: ".length", sol: "const quantitat = dades.length;" },
+                { diff: "facil", title: "4. Afegir final", q: "Afegeix 'Tardor' al final de l'array.", setup: "const estacions = ['Estiu'];", hint: ".push()", sol: "estacions.push('Tardor');" },
+                { diff: "facil", title: "5. Eliminar final", q: "Elimina el darrer element de <code>tasques</code>.", setup: "const tasques = ['Dormir', 'Estudiar'];", hint: ".pop() va buit.", sol: "tasques.pop();" },
+                { diff: "mitja", title: "6. Afegir principi", q: "Afegeix 'Zero' al principi.", setup: "const nums = ['Un'];", hint: ".unshift()", sol: "nums.unshift('Zero');" },
+                { diff: "mitja", title: "7. indexOf", q: "Busca l'índex de 'JS' a la variable <code>pos</code>.", setup: "const l = ['HTML', 'JS'];", hint: ".indexOf()", sol: "const pos = l.indexOf('JS');" },
+                { diff: "mitja", title: "8. Slice", q: "Crea <code>sub</code> amb els 2 primers elements.", setup: "const a = [1, 2, 3, 4];", hint: ".slice(0, 2)", sol: "const sub = a.slice(0, 2);" },
+                { diff: "mitja", title: "9. Splice", q: "Elimina l'element a la posició 2.", setup: "const g = ['A', 'B', 'C', 'D'];", hint: ".splice(2, 1)", sol: "g.splice(2, 1);" },
+                { diff: "mitja", title: "10. forEach", q: "Fes un log de cada element.", setup: "const l = ['A', 'B'];", hint: "l.forEach(item => ...)", sol: "l.forEach(function(item) {\n  console.log(item);\n});" },
+                { diff: "mitja", title: "11. Map", q: "Crea <code>dobles</code> multiplicant per 2.", setup: "const n = [1, 2];", hint: ".map()", sol: "const dobles = n.map(x => x * 2);" },
+                { diff: "mitja", title: "12. Filter", q: "Filtra els majors de 10 a <code>grans</code>.", setup: "const n = [5, 15];", hint: ".filter()", sol: "const grans = n.filter(x => x > 10);" },
+                { diff: "dificil", title: "13. Reduce", q: "Suma tot l'array a la variable <code>total</code>.", setup: "const n = [1, 2, 3];", hint: ".reduce((a, b) => a + b, 0)", sol: "const total = n.reduce((a, b) => a + b, 0);" },
+                { diff: "dificil", title: "14. Bidimensional", q: "Accedeix al 'Tresor' (fila 1, col 1) a la variable <code>t</code>.", setup: "const m = [['A', 'B'], ['C', 'Tresor']];", hint: "m[1][1]", sol: "const t = m[1][1];" },
+                { diff: "dificil", title: "15. Bucle Matriu", q: "Suma la matriu a <code>s</code>.", setup: "let s = 0; const m = [[1],[2]];", hint: "Dos bucles for.", sol: "for(let i=0; i<m.length; i++){\n  for(let j=0; j<m[i].length; j++){\n    s += m[i][j];\n  }\n}" },
+
+                // ELS 15 DE FOR I IF/ELSE
+                { diff: "facil", title: "16. Omplir un array (for)", q: "Usa un bucle <code>for</code> per afegir els números del 1 al 3 a l'array <code>nums</code>.", setup: "const nums = [];", hint: "for(let i=1; i<=3; i++)", sol: "for (let i = 1; i <= 3; i++) {\n  nums.push(i);\n}" },
+                { diff: "facil", title: "17. Copiar array (for)", q: "Copia tots els elements d'<code>origen</code> a <code>desti</code> amb un bucle.", setup: "const origen = ['a', 'b'];\nconst desti = [];", hint: "desti.push(origen[i])", sol: "for (let i = 0; i < origen.length; i++) {\n  desti.push(origen[i]);\n}" },
+                { diff: "facil", title: "18. Incrementar valors (for)", q: "Suma 1 a cada número de l'array.", setup: "const valors = [10, 20];", hint: "valors[i] = valors[i] + 1", sol: "for (let i = 0; i < valors.length; i++) {\n  valors[i] = valors[i] + 1;\n}" },
+                { diff: "facil", title: "19. Trobar el mínim (for + if)", q: "Guarda el número més petit a <code>minim</code>.", setup: "const dades = [5, 2, 8];\nlet minim = dades[0];", hint: "if (dades[i] < minim)", sol: "for (let i = 0; i < dades.length; i++) {\n  if (dades[i] < minim) {\n    minim = dades[i];\n  }\n}" },
+                { diff: "facil", title: "20. Comptar zeros (for + if)", q: "Compta quants 0 hi ha a <code>llista</code>.", setup: "const llista = [0, 1, 0, 2];\nlet zeros = 0;", hint: "if (llista[i] === 0)", sol: "for (let i = 0; i < llista.length; i++) {\n  if (llista[i] === 0) {\n    zeros++;\n  }\n}" },
+                { diff: "mitja", title: "21. Aprovats i Suspesos (if/else)", q: "Si la nota és >= 5, afegeix 'Aprovat' a <code>estats</code>, sinó 'Suspès'.", setup: "const notes = [4, 7];\nconst estats = [];", hint: "if/else amb push", sol: "for (let i = 0; i < notes.length; i++) {\n  if (notes[i] >= 5) {\n    estats.push('Aprovat');\n  } else {\n    estats.push('Suspès');\n  }\n}" },
+                { diff: "mitja", title: "22. Paraules amb 'A' (for + if)", q: "Afegeix a <code>resultat</code> les paraules que comencen per 'A'.", setup: "const text = ['Avui', 'No', 'Ara'];\nconst resultat = [];", hint: "text[i][0] === 'A'", sol: "for (let i = 0; i < text.length; i++) {\n  if (text[i][0] === 'A') {\n    resultat.push(text[i]);\n  }\n}" },
+                { diff: "mitja", title: "23. Producte total (for)", q: "Multiplica tots els números i guarda'ls a <code>prod</code>.", setup: "const n1 = [2, 3, 4];\nlet prod = 1;", hint: "prod *= n1[i]", sol: "for (let i = 0; i < n1.length; i++) {\n  prod *= n1[i];\n}" },
+                { diff: "mitja", title: "24. Alternar valors (if/else)", q: "Si l'índex és parell, posa 'P', sinó 'S' a l'array <code>lletres</code>.", setup: "const lletres = ['', '', '', ''];", hint: "if (i % 2 === 0)", sol: "for (let i = 0; i < lletres.length; i++) {\n  if (i % 2 === 0) {\n    lletres[i] = 'P';\n  } else {\n    lletres[i] = 'S';\n  }\n}" },
+                { diff: "mitja", title: "25. Suma condicionada (for + if)", q: "Suma només els números menors de 10.", setup: "const n2 = [5, 15, 8, 20];\nlet suma = 0;", hint: "if (n2[i] < 10)", sol: "for (let i = 0; i < n2.length; i++) {\n  if (n2[i] < 10) {\n    suma += n2[i];\n  }\n}" },
+                { diff: "dificil", title: "26. El primer negatiu (break)", q: "Guarda el primer número negatiu a <code>neg</code> i atura el bucle.", setup: "const dades2 = [5, 2, -3, 8, -1];\nlet neg = 0;", hint: "Usa break; dins de l'if", sol: "for (let i = 0; i < dades2.length; i++) {\n  if (dades2[i] < 0) {\n    neg = dades2[i];\n    break;\n  }\n}" },
+                { diff: "dificil", title: "27. Comptar lletres (for)", q: "Suma la longitud de totes les paraules a <code>total</code>.", setup: "const p = ['Un', 'Dos', 'Tres'];\nlet total = 0;", hint: "total += p[i].length", sol: "for (let i = 0; i < p.length; i++) {\n  total += p[i].length;\n}" },
+                { diff: "dificil", title: "28. Meitat de l'array (for)", q: "Copia només la primera meitat de l'array a <code>meitat</code>.", setup: "const num = [1, 2, 3, 4];\nconst meitat = [];", hint: "La condició ha de ser i < num.length / 2", sol: "for (let i = 0; i < num.length / 2; i++) {\n  meitat.push(num[i]);\n}" },
+                { diff: "dificil", title: "29. Substituir text (for + if)", q: "Si veus la paraula 'Vell', canvia-la per 'Nou'.", setup: "const elements = ['Vell', 'Casa', 'Vell'];", hint: "if (elements[i] === 'Vell')", sol: "for (let i = 0; i < elements.length; i++) {\n  if (elements[i] === 'Vell') {\n    elements[i] = 'Nou';\n  }\n}" },
+                { diff: "dificil", title: "30. Array a String (for)", q: "Concatena les lletres a la variable string <code>text</code>.", setup: "const textLletres = ['H', 'o', 'l', 'a'];\nlet text = '';", hint: "text += textLletres[i]", sol: "for (let i = 0; i < textLletres.length; i++) {\n  text += textLletres[i];\n}" },
+
+                // ELS 15 NOUS EXTRA (DEL 31 AL 45) - ENCARA MÉS LÒGICA DE BUCLES
+                { diff: "mitja", title: "31. Suma índexs senars", q: "Suma només els elements que estiguin en posicions senars de l'array (índex 1, 3, 5...).", setup: "const llista = [10, 20, 30, 40];\nlet sumaSenars = 0;", hint: "if (i % 2 !== 0)", sol: "for (let i = 0; i < llista.length; i++) {\n  if (i % 2 !== 0) {\n    sumaSenars += llista[i];\n  }\n}" },
+                { diff: "mitja", title: "32. Intercanviar extrems", q: "Intercanvia de lloc el primer i l'últim element de l'array.", setup: "const valors = ['A', 'B', 'C'];\nlet temp = valors[0];", hint: "Guarda el primer, mou l'últim al principi, i posa el guardat al final.", sol: "valors[0] = valors[valors.length - 1];\nvalors[valors.length - 1] = temp;" },
+                { diff: "mitja", title: "33. Índex del mínim", q: "Troba a quina posició (índex) es troba el número més petit.", setup: "const dades = [8, 3, 9, 1];\nlet indexMinim = 0;", hint: "if (dades[i] < dades[indexMinim]) { indexMinim = i; }", sol: "for (let i = 0; i < dades.length; i++) {\n  if (dades[i] < dades[indexMinim]) {\n    indexMinim = i;\n  }\n}" },
+                { diff: "mitja", title: "34. Boolean Flag (break)", q: "Si trobes algun 0, posa la variable <code>teZero</code> a true i atura el bucle.", setup: "const nums = [5, 1, 0, 9];\nlet teZero = false;", hint: "if (nums[i] === 0)", sol: "for (let i = 0; i < nums.length; i++) {\n  if (nums[i] === 0) {\n    teZero = true;\n    break;\n  }\n}" },
+                { diff: "mitja", title: "35. Condició Negativa", q: "Multiplica per 2 només els números que siguin negatius.", setup: "const n = [5, -2, 8, -4];", hint: "if (n[i] < 0) { n[i] *= 2; }", sol: "for (let i = 0; i < n.length; i++) {\n  if (n[i] < 0) {\n    n[i] = n[i] * 2;\n  }\n}" },
+                { diff: "mitja", title: "36. Unir dos arrays (for)", q: "Afegeix manualment els elements de l'array <code>b</code> al final de l'array <code>a</code> usant un bucle.", setup: "const a = [1, 2];\nconst b = [3, 4];", hint: "Fes un bucle sobre 'b' i fes a.push(b[i])", sol: "for (let i = 0; i < b.length; i++) {\n  a.push(b[i]);\n}" },
+                { diff: "mitja", title: "37. Acaben en 'a'", q: "Compta quantes paraules acaben amb la lletra 'a'.", setup: "const paraules = ['casa', 'gos', 'porta'];\nlet acabenEnA = 0;", hint: "if (paraules[i][paraules[i].length - 1] === 'a')", sol: "for (let i = 0; i < paraules.length; i++) {\n  if (paraules[i][paraules[i].length - 1] === 'a') {\n    acabenEnA++;\n  }\n}" },
+                { diff: "dificil", title: "38. Array d'extrems", q: "Crea un array només amb el primer i l'últim element de l'array original.", setup: "const v = ['Primer', 'Mig', 'Últim'];\nconst extrems = [];", hint: "Pots fer-ho amb 2 push sense bucle.", sol: "extrems.push(v[0]);\nextrems.push(v[v.length - 1]);" },
+                { diff: "dificil", title: "39. Aplanar Matriu 2D", q: "Converteix la matriu de 2x2 en un array d'una sola dimensió (1D) anomenat <code>pla</code>.", setup: "const m = [[1, 2], [3, 4]];\nconst pla = [];", hint: "Dos bucles for. Dins del segon: pla.push(m[i][j])", sol: "for (let i = 0; i < m.length; i++) {\n  for (let j = 0; j < m[i].length; j++) {\n    pla.push(m[i][j]);\n  }\n}" },
+                { diff: "dificil", title: "40. Restar Màxim i Mínim", q: "Troba el número més gran, el més petit i guarda la diferència a <code>dif</code>.", setup: "const arr = [10, 50, 5, 20];\nlet max = arr[0], min = arr[0];\nlet dif;", hint: "Usa if per max i if per min dins del bucle, després resta'ls.", sol: "for (let i = 0; i < arr.length; i++) {\n  if (arr[i] > max) max = arr[i];\n  if (arr[i] < min) min = arr[i];\n}\ndif = max - min;" },
+                { diff: "dificil", title: "41. Coincidència d'índex", q: "Compta quants elements tenen exactament el mateix valor que el seu número d'índex.", setup: "const valors = [0, 5, 2, 8];\nlet iguals = 0;", hint: "if (valors[i] === i)", sol: "for (let i = 0; i < valors.length; i++) {\n  if (valors[i] === i) {\n    iguals++;\n  }\n}" },
+                { diff: "dificil", title: "42. Sumar fins error (break)", q: "Suma els números fins que trobis un valor negatiu. Aleshores atura't immediatament.", setup: "const llista = [10, 5, -1, 20];\nlet s = 0;", hint: "Si és < 0 fas break, sinó sumes.", sol: "for (let i = 0; i < llista.length; i++) {\n  if (llista[i] < 0) {\n    break;\n  }\n  s += llista[i];\n}" },
+                { diff: "dificil", title: "43. Duplicar elements (for)", q: "Afegeix cada element de <code>original</code> dues vegades seguides a <code>repetit</code>.", setup: "const original = ['A', 'B'];\nconst repetit = [];", hint: "Dins del bucle, fes push del mateix element dues vegades.", sol: "for (let i = 0; i < original.length; i++) {\n  repetit.push(original[i]);\n  repetit.push(original[i]);\n}" },
+                { diff: "dificil", title: "44. Acumular fins límit (break)", q: "Ves sumant els valors a <code>sumaTotal</code>. Si la suma supera 100, atura el bucle.", setup: "const dades = [50, 40, 30, 20];\nlet sumaTotal = 0;", hint: "Després de sumar, if (sumaTotal > 100) break;", sol: "for (let i = 0; i < dades.length; i++) {\n  sumaTotal += dades[i];\n  if (sumaTotal > 100) {\n    break;\n  }\n}" },
+                { diff: "dificil", title: "45. Comprovar si tots són iguals", q: "Si tots els elements són 'A', <code>totIgual</code> valdrà true, si n'hi ha algun de diferent, false.", setup: "const caracters = ['A', 'A', 'B'];\nlet totIgual = true;", hint: "if (caracters[i] !== 'A') { totIgual = false; break; }", sol: "for (let i = 0; i < caracters.length; i++) {\n  if (caracters[i] !== 'A') {\n    totIgual = false;\n    break;\n  }\n}" }
+            ]
+        },
+        "dom": {
+            name: "Bloc 2: DOM i Selecció (15 Activitats)",
+            exercises: [
+                { diff: "facil", title: "1. Seleccionar per ID", q: "Selecciona l'element amb l'id <code>titol</code> i guarda'l a la variable <code>capcalera</code> usant <code>querySelector</code>.", setup: "<h1 id='titol'>Hola Món</h1>", hint: "querySelector('#titol')", sol: "const capcalera = document.querySelector('#titol');" },
+                { diff: "facil", title: "2. Seleccionar per classe", q: "Selecciona el primer element amb la classe <code>destacat</code> i guarda'l a <code>element</code>.", setup: "<p class='destacat'>Text</p>", hint: "querySelector('.destacat')", sol: "const element = document.querySelector('.destacat');" },
+                { diff: "facil", title: "3. Canviar el text", q: "Selecciona l'id <code>missatge</code> i canvia el seu text a 'Benvingut!'.", setup: "<p id='missatge'>Hola</p>", hint: "querySelector i .textContent", sol: "const msg = document.querySelector('#missatge');\nmsg.textContent = 'Benvingut!';" },
+                { diff: "facil", title: "4. Canviar l'estil", q: "Selecciona <code>#caixa</code> i canvia el seu fons a 'blue'.", setup: "<div id='caixa'></div>", hint: ".style.backgroundColor", sol: "const caixa = document.querySelector('#caixa');\ncaixa.style.backgroundColor = 'blue';" },
+                { diff: "facil", title: "5. Afegir classe", q: "Selecciona <code>#btn</code> i afegeix-li la classe 'actiu'.", setup: "<button id='btn'>Clic</button>", hint: ".classList.add()", sol: "const btn = document.querySelector('#btn');\nbtn.classList.add('actiu');" },
+                { diff: "mitja", title: "6. Seleccionar múltiples", q: "Selecciona tots els <code>.item</code> i guarda'ls a <code>llistaItems</code>.", setup: "", hint: "querySelectorAll('.item')", sol: "const llistaItems = document.querySelectorAll('.item');" },
+                { diff: "mitja", title: "7. forEach DOM", q: "Canvia el color de text de tots els <code>.btn</code> a vermell.", setup: "", hint: "querySelectorAll i forEach", sol: "const botons = document.querySelectorAll('.btn');\nbotons.forEach(function(boto) {\n  boto.style.color = 'red';\n});" },
+                { diff: "mitja", title: "8. Toggle classe", q: "Fes un toggle de la classe 'ocult' a l'id <code>#panell</code>.", setup: "", hint: ".classList.toggle()", sol: "const panell = document.querySelector('#panell');\npanell.classList.toggle('ocult');" },
+                { diff: "mitja", title: "9. HTML intern", q: "Posa un <code>&lt;strong&gt;</code> dins de <code>#alerta</code>.", setup: "", hint: ".innerHTML", sol: "const alerta = document.querySelector('#alerta');\nalerta.innerHTML = '<strong>Molt important</strong>';" },
+                { diff: "mitja", title: "10. Remove Class", q: "Treu la classe 'error' de <code>#nom</code>.", setup: "", hint: ".classList.remove()", sol: "const inputNom = document.querySelector('#nom');\ninputNom.classList.remove('error');" },
+                { diff: "mitja", title: "11. Atribut", q: "Canvia el <code>src</code> de <code>#avatar</code> a 'foto.png'.", setup: "", hint: "img.src = ...", sol: "const img = document.querySelector('#avatar');\nimg.src = 'foto.png';" },
+                { diff: "mitja", title: "12. Value Input", q: "Guarda el valor de l'input <code>#correu</code> a <code>valorUsuari</code>.", setup: "", hint: ".value", sol: "const correu = document.querySelector('#correu');\nconst valorUsuari = correu.value;" },
+                { diff: "dificil", title: "13. AppendChild", q: "Crea un <code>&lt;p&gt;</code> i fica'l dins de <code>#contenidor</code>.", setup: "", hint: "createElement i appendChild", sol: "const contenidor = document.querySelector('#contenidor');\nconst nouParagraf = document.createElement('p');\nnouParagraf.textContent = 'Nou paràgraf';\ncontenidor.appendChild(nouParagraf);" },
+                { diff: "dificil", title: "14. Closest", q: "Busca el pare <code>.targeta</code> des de <code>#tancar</code>.", setup: "", hint: ".closest()", sol: "const btn = document.querySelector('#tancar');\nconst pareTargeta = btn.closest('.targeta');" },
+                { diff: "dificil", title: "15. Eliminar", q: "Selecciona <code>#publicitat</code> i elimina'l.", setup: "", hint: ".remove()", sol: "const anunci = document.querySelector('#publicitat');\nanunci.remove();" }  ]
+        },
+        "events": {
+            name: "Bloc 3: Events (15 Activitats)",
+            exercises: [
+                { diff: "facil", title: "1. Detectar un clic", q: "Afegeix un event al botó perquè mostri un <code>console.log('Clicat!')</code> quan s'hi faci clic.", setup: "const btn = document.getElementById('boto');", hint: "Utilitza addEventListener('click', ...)", sol: "btn.addEventListener('click', function() {\n  console.log('Clicat!');\n});" },
+                { diff: "facil", title: "2. Doble clic (dblclick)", q: "Fes que la caixa canviï el seu color de fons a 'groc' (yellow) quan s'hi faci doble clic.", setup: "const caixa = document.getElementById('caixa');", hint: "L'event és 'dblclick'.", sol: "caixa.addEventListener('dblclick', function() {\n  caixa.style.backgroundColor = 'yellow';\n});" },
+                { diff: "facil", title: "3. Ratolí a sobre (mouseenter)", q: "Quan el ratolí entri a la imatge, afegeix-li la classe <code>ombra</code>.", setup: "const img = document.getElementById('foto');", hint: "L'event és 'mouseenter'.", sol: "img.addEventListener('mouseenter', function() {\n  img.classList.add('ombra');\n});" },
+                { diff: "facil", title: "4. Focus a un input", q: "Quan l'usuari faci clic dins l'input (event <code>focus</code>), canvia el seu fons a '#e8f0ff'.", setup: "const inputNom = document.getElementById('nom');", hint: "L'event és 'focus'.", sol: "inputNom.addEventListener('focus', function() {\n  inputNom.style.backgroundColor = '#e8f0ff';\n});" },
+                { diff: "facil", title: "5. Treure el focus (blur)", q: "Quan l'usuari surti de l'input (event <code>blur</code>), torna el fons a color blanc.", setup: "const inputNom = document.getElementById('nom');", hint: "L'event és 'blur'.", sol: "inputNom.addEventListener('blur', function() {\n  inputNom.style.backgroundColor = 'white';\n});" },
+                { diff: "mitja", title: "6. L'objecte Event (e)", q: "Fes un console.log de l'element que ha rebut el clic (usant <code>event.target</code>).", setup: "const btn = document.getElementById('boto');", hint: "Passa 'e' com a paràmetre a la funció.", sol: "btn.addEventListener('click', function(e) {\n  console.log(e.target);\n});" },
+                { diff: "mitja", title: "7. Evitar comportament per defecte", q: "Evita que l'enllaç et porti a una altra pàgina.", setup: "const enllac = document.getElementById('linkGoogle');", hint: "Utilitza e.preventDefault()", sol: "enllac.addEventListener('click', function(e) {\n  e.preventDefault();\n});" },
+                { diff: "mitja", title: "8. Utilitzar 'this'", q: "Al fer clic, canvia el text d'AQUELL botó a 'Enviat' usant <code>this</code>.", setup: "const btn = document.getElementById('enviar');", hint: "this.textContent = 'Enviat'", sol: "btn.addEventListener('click', function() {\n  this.textContent = 'Enviat';\n});" },
+                { diff: "mitja", title: "9. Detectar tecla premuda (keydown)", q: "Detecta si es prem 'Enter' a tot el document i fes un console.log.", setup: "// No cal seleccionar res", hint: "document.addEventListener('keydown', function(e) {...})", sol: "document.addEventListener('keydown', function(e) {\n  if (e.key === 'Enter') console.log('Fet!');\n});" },
+                { diff: "mitja", title: "10. Event d'input en temps real", q: "Fes que al teclejar a l'input, es mostri per consola el seu valor actual.", setup: "const input = document.getElementById('cercador');", hint: "L'event és 'input'.", sol: "input.addEventListener('input', function() {\n  console.log(input.value);\n});" },
+                { diff: "mitja", title: "11. Canvi en un select (change)", q: "Quan es canviï d'opció al select, mostra'n el nou valor.", setup: "const select = document.getElementById('paisos');", hint: "L'event és 'change'.", sol: "select.addEventListener('change', function() {\n  console.log(select.value);\n});" },
+                { diff: "mitja", title: "12. Eliminar un event", q: "Elimina l'event 'click' del botó.", setup: "const btn = document.getElementById('boto');\nfunction accio() { console.log('Fet'); }\nbtn.addEventListener('click', accio);", hint: "Utilitza removeEventListener", sol: "btn.removeEventListener('click', accio);" },
+                { diff: "dificil", title: "13. Events a múltiples elements", q: "Afegeix un event click a TOTS els elements <code>.item</code> per afegir-los la classe 'vist'.", setup: "const llistaItems = document.querySelectorAll('.item');", hint: "Usa forEach per iterar la llista abans d'afegir l'event.", sol: "llistaItems.forEach(function(item) {\n  item.addEventListener('click', function() {\n    this.classList.add('vist');\n  });\n});" },
+                { diff: "dificil", title: "14. Validació en enviar form", q: "Evita que s'enviï el formulari i fes un alert si l'input està buit.", setup: "const form = document.getElementById('formLogin');\nconst inputNom = document.getElementById('usuari');", hint: "L'event és 'submit' al form.", sol: "form.addEventListener('submit', function(e) {\n  e.preventDefault();\n  if (inputNom.value === '') alert('Buit!');\n});" },
+                { diff: "dificil", title: "15. Delegació d'events", q: "Afegeix l'event click al <code>ul</code> i comprova si l'objectiu era un <code>LI</code>.", setup: "const ul = document.getElementById('llista');", hint: "Comprova e.target.tagName", sol: "ul.addEventListener('click', function(e) {\n  if (e.target.tagName === 'LI') console.log('Llista clicada');\n});" }
+            ]
+        },
+        "storage": {
+            name: "Bloc 4: Web Storage (15 Activitats)",
+            exercises: [
+                { diff: "facil", title: "1. Guardar una dada", q: "Guarda el nom 'Anna' al <code>localStorage</code> amb clau 'usuari'.", setup: "", hint: "localStorage.setItem()", sol: "localStorage.setItem('usuari', 'Anna');" },
+                { diff: "facil", title: "2. Recuperar una dada", q: "Recupera la clau 'usuari' i guarda-la a <code>nom</code>.", setup: "let nom;", hint: "localStorage.getItem()", sol: "nom = localStorage.getItem('usuari');" },
+                { diff: "facil", title: "3. Eliminar una dada", q: "Elimina la clau 'usuari'.", setup: "", hint: "localStorage.removeItem()", sol: "localStorage.removeItem('usuari');" },
+                { diff: "facil", title: "4. Netejar tot", q: "Esborra tot el localStorage.", setup: "", hint: "localStorage.clear()", sol: "localStorage.clear();" },
+                { diff: "facil", title: "5. Guardar a sessionStorage", q: "Guarda 'Fosc' com a 'tema' al sessionStorage.", setup: "", hint: "sessionStorage.setItem()", sol: "sessionStorage.setItem('tema', 'Fosc');" },
+                { diff: "mitja", title: "6. Comprovar dada", q: "Mostra 'idioma' si existeix al localStorage.", setup: "const idioma = localStorage.getItem('idioma');", hint: "if (idioma !== null)", sol: "if (idioma !== null) console.log(idioma);" },
+                { diff: "mitja", title: "7. Guardar Array (stringify)", q: "Guarda l'array de tasques al localStorage.", setup: "const tasques = ['A', 'B'];", hint: "JSON.stringify()", sol: "localStorage.setItem('llista', JSON.stringify(tasques));" },
+                { diff: "mitja", title: "8. Recuperar Array (parse)", q: "Recupera l'array 'llista' a <code>tasques</code>.", setup: "let tasques;\nconst json = localStorage.getItem('llista');", hint: "JSON.parse()", sol: "tasques = JSON.parse(json);" },
+                { diff: "mitja", title: "9. Guardar Objecte", q: "Guarda l'objecte <code>alumne</code>.", setup: "const alumne = { nom: 'Marc' };", hint: "Mateix mètode que amb l'array.", sol: "localStorage.setItem('dadesAlumne', JSON.stringify(alumne));" },
+                { diff: "mitja", title: "10. Modificar dada", q: "Canvia el 'tema' a 'Fosc'.", setup: "localStorage.setItem('tema', 'Clar');", hint: "Torna a fer un setItem.", sol: "localStorage.setItem('tema', 'Fosc');" },
+                { diff: "mitja", title: "11. Comptar elements", q: "Guarda quants elements hi ha guardats.", setup: "let quants;", hint: "localStorage.length", sol: "quants = localStorage.length;" },
+                { diff: "mitja", title: "12. Guardar input", q: "Guarda el valor de l'input.", setup: "const input = document.getElementById('nom');", hint: "Utilitza input.value", sol: "localStorage.setItem('usuari', input.value);" },
+                { diff: "dificil", title: "13. Comptador de visites", q: "Si 'visites' no existeix posa 1, si existeix suma-li 1.", setup: "let val = localStorage.getItem('visites');", hint: "Utilitza parseInt(val) per sumar matemàticament.", sol: "if(val === null) {\n  localStorage.setItem('visites', 1);\n} else {\n  localStorage.setItem('visites', parseInt(val)+1);\n}" },
+                { diff: "dificil", title: "14. Controlar errors (Recuperació)", q: "Recupera l'objecte, o assigna {} si no existeix.", setup: "let config;\nconst data = localStorage.getItem('config');", hint: "if (data) vs else", sol: "if(data) config = JSON.parse(data);\nelse config = {};" },
+                { diff: "dificil", title: "15. Afegir a Array", q: "Afegeix '99' a l'array 'favs' que ja està guardat.", setup: "const favs = localStorage.getItem('favs');", hint: "Parse -> push -> Stringify", sol: "const arr = JSON.parse(favs);\narr.push(99);\nlocalStorage.setItem('favs', JSON.stringify(arr));" }
+            ]
+        },
+        "funcions": {
+            name: "Bloc 5: Funcions i Date (15 Activitats)",
+            exercises: [
+                { diff: "facil", title: "1. Funció bàsica", q: "Crea una funció <code>saludar</code> que faci console.log('Hola').", setup: "", hint: "function saludar() {}", sol: "function saludar() {\n  console.log('Hola');\n}" },
+                { diff: "facil", title: "2. Crida funció", q: "Crida la funció inici.", setup: "function inici() {}", hint: "inici();", sol: "inici();" },
+                { diff: "facil", title: "3. Paràmetres", q: "Funció <code>doble(num)</code> que mostri num*2.", setup: "", hint: "Afegeix el paràmetre als parèntesis.", sol: "function doble(num) {\n  console.log(num * 2);\n}" },
+                { diff: "facil", title: "4. Objecte Date", q: "Crea un objecte data actual a <code>ara</code>.", setup: "let ara;", hint: "new Date()", sol: "ara = new Date();" },
+                { diff: "facil", title: "5. Obtenir l'any", q: "Obtén l'any actual.", setup: "const d = new Date();\nlet any;", hint: "d.getFullYear()", sol: "any = d.getFullYear();" },
+                { diff: "mitja", title: "6. Retornar valors", q: "Funció que retorni la suma de a i b.", setup: "", hint: "Usa return", sol: "function suma(a, b) {\n  return a + b;\n}" },
+                { diff: "mitja", title: "7. Funcions Arrow", q: "Fes que <code>mult(a,b)</code> sigui arrow function.", setup: "", hint: "const mult = (a, b) => {}", sol: "const mult = (a, b) => a * b;" },
+                { diff: "mitja", title: "8. Default Params", q: "Funció <code>saluda(nom='Anònim')</code>.", setup: "", hint: "Assigna el valor dins dels parèntesis.", sol: "function saluda(nom='Anònim') {\n  console.log('Hola', nom);\n}" },
+                { diff: "mitja", title: "9. Mes actual", q: "Guarda el número de mes actual (1-12).", setup: "const d = new Date();\nlet mes;", hint: "getMonth() + 1", sol: "mes = d.getMonth() + 1;" },
+                { diff: "mitja", title: "10. Dia de la setmana", q: "Obtén el dia (0-6).", setup: "const d = new Date();", hint: "getDay()", sol: "const dia = d.getDay();" },
+                { diff: "mitja", title: "11. Format local", q: "Data en string format local.", setup: "const d = new Date();", hint: "toLocaleDateString()", sol: "const txt = d.toLocaleDateString();" },
+                { diff: "mitja", title: "12. Timestamp", q: "Aconsegueix el timestamp.", setup: "const d = new Date();", hint: "getTime()", sol: "const ms = d.getTime();" },
+                { diff: "dificil", title: "13. Callback", q: "Crea <code>processar(num, callback)</code> i crida el callback.", setup: "", hint: "Crida callback(num) dins la funció.", sol: "function processar(num, callback) {\n  callback(num);\n}" },
+                { diff: "dificil", title: "14. Crear data específica", q: "Crea la data 25 Desembre 2025.", setup: "", hint: "new Date(any, mes, dia)", sol: "const nadal = new Date(2025, 11, 25);" },
+                { diff: "dificil", title: "15. Diferència dates", q: "Calcula MS entre data2 i data1.", setup: "const d1 = new Date();\nconst d2 = new Date(2025, 11, 25);", hint: "Resta les dates", sol: "const dif = d2.getTime() - d1.getTime();" }
+            ]
+        },
+        "fetch": {
+            name: "Bloc 6: Fetch i Promeses (15 Activitats)",
+            exercises: [
+                { diff: "facil", title: "1. Petició bàsica", q: "Fes fetch a 'url'.", setup: "", hint: "fetch('url')", sol: "fetch('url');" },
+                { diff: "facil", title: "2. Tractar resposta", q: "Afegeix .then() per veure la resposta.", setup: "fetch('url')", hint: ".then(res => ...)", sol: "fetch('url').then(res => console.log(res));" },
+                { diff: "facil", title: "3. A JSON", q: "Converteix la resposta a JSON.", setup: "fetch('url')", hint: "res.json()", sol: "fetch('url').then(res => res.json());" },
+                { diff: "facil", title: "4. Capturar errors", q: "Afegeix un catch() al final.", setup: "fetch('url').then(res=>res.json())", hint: ".catch(err => ...)", sol: "fetch('url').then(res=>res.json()).catch(e => console.log(e));" },
+                { diff: "facil", title: "5. Funció Async", q: "Crea <code>async function getDades()</code>.", setup: "", hint: "Posa async davant.", sol: "async function getDades() {}" },
+                { diff: "mitja", title: "6. Await fetch", q: "Usa await pel fetch a <code>res</code>.", setup: "async function get() {}", hint: "const res = await fetch()", sol: "async function get() {\n  const res = await fetch('url');\n}" },
+                { diff: "mitja", title: "7. Await JSON", q: "Afegeix await per l'extracció json a <code>dades</code>.", setup: "async function get() {\n  const res = await fetch('url');\n}", hint: "await res.json()", sol: "async function get() {\n  const res = await fetch('url');\n  const dades = await res.json();\n}" },
+                { diff: "mitja", title: "8. res.ok", q: "Comprova !res.ok i llança error.", setup: "async function get() {\n  const res = await fetch('url');\n}", hint: "if(!res.ok) throw new Error()", sol: "async function get() {\n  const res = await fetch('url');\n  if(!res.ok) throw new Error('Error');\n}" },
+                { diff: "mitja", title: "9. POST Method", q: "Fetch amb mètode POST.", setup: "fetch('url', {", hint: "method: 'POST'", sol: "fetch('url', { method: 'POST' });" },
+                { diff: "mitja", title: "10. Headers", q: "Afegeix Content-Type a JSON.", setup: "fetch('url', {", hint: "headers: { 'Content-Type': 'application/json' }", sol: "fetch('url', { headers: { 'Content-Type': 'application/json' } });" },
+                { diff: "mitja", title: "11. Body json", q: "Envia {nom:'Joan'} via body.", setup: "fetch('url', {", hint: "body: JSON.stringify(...)", sol: "fetch('url', {\n  body: JSON.stringify({nom:'Joan'})\n});" },
+                { diff: "mitja", title: "12. Try...Catch", q: "Posa un try-catch al codi.", setup: "async function () {\n  const r = await fetch('url');\n}", hint: "try {} catch {}", sol: "async function() {\n  try { const r = await fetch('url'); }\n  catch(e) { console.log(e); }\n}" },
+                { diff: "dificil", title: "13. Funció GET Completa", q: "Fes la funció asíncrona perfecta (try/catch, fetch, ok, json).", setup: "async function getAll() {", hint: "Ajunta-ho tot", sol: "async function getAll() {\n  try {\n    const r = await fetch('url');\n    if(!r.ok) throw new Error();\n    const data = await r.json();\n  } catch(e) {}\n}" },
+                { diff: "dificil", title: "14. Pintar al DOM", q: "Crea LIs des de JSON data.", setup: "const ul = document.getElementById('u');\nconst data = [{nom:'a'}];", hint: "forEach, createElement, appendChild", sol: "data.forEach(x => {\n  let li = document.createElement('li');\n  li.textContent = x.nom;\n  ul.appendChild(li);\n});" },
+                { diff: "dificil", title: "15. Promise.all", q: "Espera 2 fetch alhora a <code>res</code>.", setup: "const p1 = fetch('u1');\nconst p2 = fetch('u2');", hint: "await Promise.all()", sol: "async function() {\n  const res = await Promise.all([p1, p2]);\n}" },
+                { diff: "mitja", title: "31. Suma índexs senars", q: "Suma només els elements que estiguin en posicions senars de l'array (índex 1, 3, 5...).", setup: "const llista = [10, 20, 30, 40];\nlet sumaSenars = 0;", hint: "if (i % 2 !== 0)", sol: "for (let i = 0; i < llista.length; i++) {\n  if (i % 2 !== 0) {\n    sumaSenars += llista[i];\n  }\n}" },
+                { diff: "mitja", title: "32. Intercanviar extrems", q: "Intercanvia de lloc el primer i l'últim element de l'array.", setup: "const valors = ['A', 'B', 'C'];\nlet temp = valors[0];", hint: "Guarda el primer, mou l'últim al principi, i posa el guardat al final.", sol: "valors[0] = valors[valors.length - 1];\nvalors[valors.length - 1] = temp;" },
+                { diff: "mitja", title: "33. Índex del mínim", q: "Troba a quina posició (índex) es troba el número més petit.", setup: "const dades = [8, 3, 9, 1];\nlet indexMinim = 0;", hint: "if (dades[i] < dades[indexMinim]) { indexMinim = i; }", sol: "for (let i = 0; i < dades.length; i++) {\n  if (dades[i] < dades[indexMinim]) {\n    indexMinim = i;\n  }\n}" },
+                { diff: "mitja", title: "34. Boolean Flag (break)", q: "Si trobes algun 0, posa la variable <code>teZero</code> a true i atura el bucle.", setup: "const nums = [5, 1, 0, 9];\nlet teZero = false;", hint: "if (nums[i] === 0)", sol: "for (let i = 0; i < nums.length; i++) {\n  if (nums[i] === 0) {\n    teZero = true;\n    break;\n  }\n}" },
+                { diff: "mitja", title: "35. Condició Negativa", q: "Multiplica per 2 només els números que siguin negatius.", setup: "const n = [5, -2, 8, -4];", hint: "if (n[i] < 0) { n[i] *= 2; }", sol: "for (let i = 0; i < n.length; i++) {\n  if (n[i] < 0) {\n    n[i] = n[i] * 2;\n  }\n}" },
+                { diff: "mitja", title: "36. Unir dos arrays (for)", q: "Afegeix manualment els elements de l'array <code>b</code> al final de l'array <code>a</code> usant un bucle.", setup: "const a = [1, 2];\nconst b = [3, 4];", hint: "Fes un bucle sobre 'b' i fes a.push(b[i])", sol: "for (let i = 0; i < b.length; i++) {\n  a.push(b[i]);\n}" },
+                { diff: "mitja", title: "37. Acaben en 'a'", q: "Compta quantes paraules acaben amb la lletra 'a'.", setup: "const paraules = ['casa', 'gos', 'porta'];\nlet acabenEnA = 0;", hint: "if (paraules[i][paraules[i].length - 1] === 'a')", sol: "for (let i = 0; i < paraules.length; i++) {\n  if (paraules[i][paraules[i].length - 1] === 'a') {\n    acabenEnA++;\n  }\n}" },
+                { diff: "dificil", title: "38. Array d'extrems", q: "Crea un array només amb el primer i l'últim element de l'array original.", setup: "const v = ['Primer', 'Mig', 'Últim'];\nconst extrems = [];", hint: "Pots fer-ho amb 2 push sense bucle.", sol: "extrems.push(v[0]);\nextrems.push(v[v.length - 1]);" },
+                { diff: "dificil", title: "39. Aplanar Matriu 2D", q: "Converteix la matriu de 2x2 en un array d'una sola dimensió (1D) anomenat <code>pla</code>.", setup: "const m = [[1, 2], [3, 4]];\nconst pla = [];", hint: "Dos bucles for. Dins del segon: pla.push(m[i][j])", sol: "for (let i = 0; i < m.length; i++) {\n  for (let j = 0; j < m[i].length; j++) {\n    pla.push(m[i][j]);\n  }\n}" },
+                { diff: "dificil", title: "40. Restar Màxim i Mínim", q: "Troba el número més gran, el més petit i guarda la diferència a <code>dif</code>.", setup: "const arr = [10, 50, 5, 20];\nlet max = arr[0], min = arr[0];\nlet dif;", hint: "Usa if per max i if per min dins del bucle, després resta'ls.", sol: "for (let i = 0; i < arr.length; i++) {\n  if (arr[i] > max) max = arr[i];\n  if (arr[i] < min) min = arr[i];\n}\ndif = max - min;" },
+                { diff: "dificil", title: "41. Coincidència d'índex", q: "Compta quants elements tenen exactament el mateix valor que el seu número d'índex.", setup: "const valors = [0, 5, 2, 8];\nlet iguals = 0;", hint: "if (valors[i] === i)", sol: "for (let i = 0; i < valors.length; i++) {\n  if (valors[i] === i) {\n    iguals++;\n  }\n}" },
+                { diff: "dificil", title: "42. Sumar fins error (break)", q: "Suma els números fins que trobis un valor negatiu. Aleshores atura't immediatament.", setup: "const llista = [10, 5, -1, 20];\nlet s = 0;", hint: "Si és < 0 fas break, sinó sumes.", sol: "for (let i = 0; i < llista.length; i++) {\n  if (llista[i] < 0) {\n    break;\n  }\n  s += llista[i];\n}" },
+                { diff: "dificil", title: "43. Duplicar elements (for)", q: "Afegeix cada element de <code>original</code> dues vegades seguides a <code>repetit</code>.", setup: "const original = ['A', 'B'];\nconst repetit = [];", hint: "Dins del bucle, fes push del mateix element dues vegades.", sol: "for (let i = 0; i < original.length; i++) {\n  repetit.push(original[i]);\n  repetit.push(original[i]);\n}" },
+                { diff: "dificil", title: "44. Acumular fins límit (break)", q: "Ves sumant els valors a <code>sumaTotal</code>. Si la suma supera 100, atura el bucle.", setup: "const dades = [50, 40, 30, 20];\nlet sumaTotal = 0;", hint: "Després de sumar, if (sumaTotal > 100) break;", sol: "for (let i = 0; i < dades.length; i++) {\n  sumaTotal += dades[i];\n  if (sumaTotal > 100) {\n    break;\n  }\n}" },
+                { diff: "dificil", title: "45. Comprovar si tots són iguals", q: "Si tots els elements són 'A', <code>totIgual</code> valdrà true, si n'hi ha algun de diferent, false.", setup: "const caracters = ['A', 'A', 'B'];\nlet totIgual = true;", hint: "if (caracters[i] !== 'A') { totIgual = false; break; }", sol: "for (let i = 0; i < caracters.length; i++) {\n  if (caracters[i] !== 'A') {\n    totIgual = false;\n    break;\n  }\n}" }
+            ]
+        },
+    };
+
+    // --- LÒGICA DE LES PESTANYES ---
+    function loadTopic(topicKey, btnElement) {
+        // Canviar pestanya activa
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        if(btnElement) btnElement.classList.add('active');
+
+        const topicData = db[topicKey];
+        document.getElementById('current-topic-title').innerText = topicData.name;
+        const container = document.getElementById('exercises-container');
+
+        if(!topicData.exercises || topicData.exercises.length === 0) {
+            container.innerHTML = `<div class="exercise"><div class="ex-body"><p>Aquest bloc encara està buit.</p></div></div>`;
+            return;
+        }
+
+        container.innerHTML = topicData.exercises.map((ex, i) => {
+            const lblDiff = ex.diff === 'facil' ? 'Fàcil 🟢' : ex.diff === 'mitja' ? 'Mitjà 🟡' : 'Difícil 🔴';
+            return `
+      <div class="exercise">
+        <div class="ex-header">
+          <span class="ex-title">${ex.title}</span>
+          <span class="dif-${ex.diff}">${lblDiff}</span>
+        </div>
+        <div class="ex-body">
+          <p class="q-text">${ex.q}</p>
+          ${ex.setup ? `<div class="setup-code"><pre>${ex.setup}</pre></div>` : ''}
+          <textarea class="code-editor" placeholder="Escriu la teva solució aquí..."></textarea>
+
+        <div class="actions">
+           <button class="btn btn-hint" onclick="toggleBox('hint-${topicKey}-${i}')">💡 Pista</button>
+            <button class="btn btn-check" style="background:var(--acc-l); color:#000;" onclick="checkAnswer('${topicKey}', ${i})">🔍 Comprovar</button>
+            <button class="btn btn-solve" onclick="toggleBox('sol-${topicKey}-${i}')">✅ Solució</button>
+            </div>
+            <div id="result-${topicKey}-${i}" class="hidden-box" style="font-weight:bold; border-left:4px solid;"></div>
+          <div id="hint-${topicKey}-${i}" class="hidden-box hint-box">${ex.hint}</div>
+          <div id="sol-${topicKey}-${i}" class="hidden-box solution-box">
+            <strong>Codi Correcte:</strong><pre>${ex.sol.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</pre>
+          </div>
+        </div>
+      </div>
+    `;
+        }).join('');
+    }
+
+    function toggleBox(id) {
+        const el = document.getElementById(id);
+        el.style.display = el.style.display === 'block' ? 'none' : 'block';
+    }
+
+    // ddddCarregar primer tema per defecte
+    window.onload = () => loadTopic('arrays', document.querySelector('.tab-btn.active'));
+    function checkAnswer(topicKey, index) {
+        const userCode = document.querySelectorAll('.exercise')[index].querySelector('.code-editor').value;
+        const solCode = db[topicKey].exercises[index].sol;
+        const resultBox = document.getElementById(`result-${topicKey}-${index}`);
+
+        // Funció per netejar el codi (treu espais, salts de línia i normalitza cometes)
+        const clean = (str) => str.replace(/\s+/g, '').replace(/['"]/g, '"').replace(/;/g, '');
+
+        resultBox.style.display = 'block';
+
+        if (clean(userCode) === clean(solCode)) {
+            resultBox.innerText = "⭐ EXCEL·LENT! El codi és correcte.";
+            resultBox.style.backgroundColor = "rgba(34, 197, 94, 0.2)";
+            resultBox.style.borderColor = "var(--green)";
+            resultBox.style.color = "var(--green)";
+        } else {
+            resultBox.innerText = "❌ No coincideix exactament. Revisa espais o algun detall!";
+            resultBox.style.backgroundColor = "rgba(239, 68, 68, 0.2)";
+            resultBox.style.borderColor = "var(--red)";
+            resultBox.style.color = "#ff8888";
+        }
+    }
+</script>
+</body>
+</html>

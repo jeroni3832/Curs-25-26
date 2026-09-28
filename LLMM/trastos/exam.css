@@ -1,0 +1,85 @@
+/*ul li:first-child{
+    color: red;
+
+}
+ul li:last-child{
+    color: red;
+}
+
+section p{
+    font-size: 0.5em;
+}
+header p{
+    font-style:italic;
+}
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+    
+body{
+  font-family: "Montserrat", sans-serif;
+
+  box-sizing: border-box;
+  margin: 0; padding: 0;
+}
+*/
+
+
+/activitat 8
+html {
+    box-sizing: border-box;
+}
+*, *:before, *:after {
+    box-sizing: inherit;
+}
+
+#Principal{
+    
+    background-color: pink;
+    text-align: center;
+    margin-top:50px;
+    padding-top:100px;
+    padding-bottom:80px;
+}
+#Manteniment, #Enllacos{
+    display: inline-block; 
+    
+    padding: 50px;
+
+    text-align: center;
+}
+#Manteniment{
+    
+    background-color: green;
+    margin-right: 50px; 
+}
+
+#Enllacos{
+    background-color: blue;   
+}
+button{ 
+    margin-right: 15px;
+    margin-left:15px;
+    padding:10px;  
+}
+
+thead{
+    background-color: green;
+}
+tbody tr td:first-child{ 
+    background-color: orange;
+
+}
+tbody tr:nth-of-type(odd){
+    background-color:gray;
+}
+
+tbody tr:nth-of-type(even){
+    background-color:purple;
+}
+
+tbody tr td:hover{
+    background-color: yellow;
+}
+th, td {
+    padding: 8px;
+}

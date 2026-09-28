@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil</title>
+    <link rel="stylesheet" href="perfil.css">
+</head>
+<body>
+
+<div id="contenedor">
+
+    <!-- COLUMNA IZQUIERDA: FORMULARI -->
+    <div class="izq">
+        <h2> Llibre d'Aventures (Perfil Avatar)</h2>
+
+        <!-- 1. Ciutat origen -->
+        <label for="ciutatOrigen"> Ciutat d'origen:</label>
+        <input type="text" id="ciutatOrigen" placeholder="Ex: Eldarath">
+
+        <!-- 2. Ciutat destí -->
+        <label for="ciutatDesti">️ Ciutat de destí:</label>
+        <input type="text" id="ciutatDesti" placeholder="Ex: Othar's Tower">
+
+        <!-- 3. Experiència (Anys) -->
+        <label for="experiencia"> Nivell d'Experiència:</label>
+        <input type="text" id="experiencia" placeholder="50">
+
+        <!-- 4. Preu (Ore/Diamant) -->
+        <label for="preu"> Valor de la recompensa (Or):</label>
+        <input type="text" id="preu"  placeholder="25">
+
+        <!-- 5. Objectes (Inventari Mágic) -->
+        <label for="objectes"> Equipament / Objectes:</label>
+        <textarea id="objectes" rows="3" placeholder="Pocions, escuts, runers..."></textarea>
+
+        <!-- 6. Persones destí (Aliats) -->
+        <label for="personesDesti"> Companys d'Aventura:</label>
+        <input type="text" id="personesDesti" placeholder="Nom dels companys...">
+
+        <!-- 7. Nivell mínim -->
+        <label for="nivellMinim"> Requisit d'Accés (Nivell):</label>
+        <input type="text" id="nivellMinim" placeholder="1">
+
+        <!-- 8. Descripció -->
+        <label for="descripcio"> Crònica de la Missió:</label>
+        <textarea id="descripcio" rows="4" placeholder="Detalls clau del viatge..."></textarea>
+
+        <!-- BOTÓ D'ACCIO -->
+        <button id="botonMissio"type="button"> Registrar a la Crònica</button>
+    </div>
+
+    <!-- COLUMNA DERECHA: RESULTATS -->
+    <div class="der">
+        <h2> Mapa de Missions Completes</h2>
+        <table id="resultat">
+            <thead>
+            <tr>
+                <th>Itinerari</th>
+                <th>Experienciència Obtinguda</th>
+                <th>Valor de la recompensa (OR)</th>
+                <th>Objectes / Equipament Obtinguts</th>
+                <th>Companys D'aventura</th>
+                <th>Nivell Requesit</th>
+                <th>Crònica</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody id="llistaResultats">
+            <!-- AQUÍ EL DOM AFEGIRÀ LES NOVES MISIÓ -->
+            </tbody>
+        </table>
+    </div>
+
+</div>
+<script src="perfil.js"></script>
+
+
+    <div class="rune" style="left: 15%">ᚠ</div> <div class="rune" style="left: 40%">ᚨ</div> <div class="rune" style="left: 65%">ᛟ</div> <div class="rune" style="left: 85%">ᛉ</div> </div>
+    <div class="runes-bg">
+    <div class="rune">ᚠ</div>
+    <div class="rune">ᚨ</div>
+    <div class="rune">ᛟ</div>
+    <div class="rune">ᛉ</div>
+    <div class="rune">ᛊ</div>
+    <div class="rune">ᛏ</div>
+    <div class="rune">ᛒ</div>
+    <div class="rune">ᛗ</div>
+</div>
+</body>
+</html>

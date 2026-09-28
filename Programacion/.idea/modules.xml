@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/Capitulo2/Capitulo2.iml" filepath="$PROJECT_DIR$/Capitulo2/Capitulo2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Lap/Lap.iml" filepath="$PROJECT_DIR$/Lap/Lap.iml" />
+      <module fileurl="file://$PROJECT_DIR$/IdeaProjects/Lap/Lap2.iml" filepath="$PROJECT_DIR$/IdeaProjects/Lap/Lap2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/PDF 37/PDF 37.iml" filepath="$PROJECT_DIR$/PDF 37/PDF 37.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Practica 7/Practica 7.iml" filepath="$PROJECT_DIR$/Practica 7/Practica 7.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/Programació 25-26.iml" filepath="$PROJECT_DIR$/.idea/Programació 25-26.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Proves/Proves.iml" filepath="$PROJECT_DIR$/Proves/Proves.iml" />
+      <module fileurl="file://$PROJECT_DIR$/IdeaProjects/Proves/Proves2.iml" filepath="$PROJECT_DIR$/IdeaProjects/Proves/Proves2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/StudentGuide-I/StudentGuide-I.iml" filepath="$PROJECT_DIR$/StudentGuide-I/StudentGuide-I.iml" />
+      <module fileurl="file://$PROJECT_DIR$/D67234GC20_labs/labs/examples/les14/dukeschoice/dukeschoice.iml" filepath="$PROJECT_DIR$/D67234GC20_labs/labs/examples/les14/dukeschoice/dukeschoice.iml" />
+      <module fileurl="file://$PROJECT_DIR$/D67234GC20_labs/labs/examples/examples.iml" filepath="$PROJECT_DIR$/D67234GC20_labs/labs/examples/examples.iml" />
+      <module fileurl="file://$PROJECT_DIR$/D67234GC20_labs/labs/labs.iml" filepath="$PROJECT_DIR$/D67234GC20_labs/labs/labs.iml" />
+      <module fileurl="file://$PROJECT_DIR$/package com.company/package com.company.iml" filepath="$PROJECT_DIR$/package com.company/package com.company.iml" />
+      <module fileurl="file://$PROJECT_DIR$/D67234GC20_labs/labs/examples/les14/soccer/soccer.iml" filepath="$PROJECT_DIR$/D67234GC20_labs/labs/examples/les14/soccer/soccer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/D67234GC20_labs/labs/soln/soln.iml" filepath="$PROJECT_DIR$/D67234GC20_labs/labs/soln/soln.iml" />
+    </modules>
+  </component>
+</project>

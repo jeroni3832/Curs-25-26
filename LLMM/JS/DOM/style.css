@@ -1,0 +1,18 @@
+.destacat {
+    color: red;
+}
+/*//tasca 1
+const titol = document.querySelector("h1");
+titol.textContent = "DAW - Llenguatges de Marques i Sistemes de Gestió d’Informació";
+
+//tasca 2
+const parrafofi = document.querySelectorAll("p");
+parrafofi[parrafofi.length-1].classList.add("destacat");
+
+//tasca 3
+const lista = document.querySelectorAll("li");
+for(let i = 0; i <lista.length; i++){
+lista[i].classList.add("destacat")
+}
+//tasca 4
+const url = document.querySelector("a");*/

@@ -1,0 +1,396 @@
+/* ==============================================
+   ❄️ CSS TEMA: MAGIA RÚNICA Y ESCARCHA ❄️
+   ============================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400&display=swap');
+
+:root {
+    /* Paleta Magia Helada */
+    --magic-bg: #090e17;          /* Azul noche casi negro para el fondo global */
+    --magic-panel: #111a28;       /* Azul marino oscuro para los paneles */
+    --magic-panel-light: #1c2a40; /* Azul marino más claro para hovers */
+    --magic-cyan: #00d2ff;        /* Cian brillante para magia/brillos */
+    --magic-silver: #a0b0c0;      /* Plata azulada para el texto base */
+    --magic-white: #e6f0fa;       /* Blanco hielo para textos importantes */
+    --magic-border: #233554;      /* Azul grisáceo para bordes */
+}
+
+/* --- 1. FONDO GLOBAL Y SCROLL --- */
+body {
+    background-color: var(--magic-bg);
+    background-image:
+            radial-gradient(circle at 15% 50%, rgba(0, 210, 255, 0.05), transparent 25%),
+            radial-gradient(circle at 85% 30%, rgba(0, 210, 255, 0.05), transparent 25%);
+    color: var(--magic-silver);
+    font-family: 'Lato', sans-serif;
+    min-height: 100vh;
+    margin: 0;
+}
+
+/* Personalizar la barra de scroll de toda la web */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+::-webkit-scrollbar-track {
+    background: var(--magic-bg);
+}
+::-webkit-scrollbar-thumb {
+    background: var(--magic-border);
+    border-radius: 5px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--magic-cyan);
+}
+
+/* --- 2. CONTENEDOR PRINCIPAL --- */
+#contenedor {
+    display: flex;
+    gap: 30px;
+    max-width: 95vw; /* Casi todo el ancho de la pantalla */
+    margin: 40px auto;
+    padding: 0 20px;
+    /* Evita que los paneles se encojan demasiado */
+    align-items: flex-start;
+}
+
+/* Panel Izquierdo (Formulario) - Ancho fijo para que no se estire raro */
+.izq {
+    flex: 0 0 400px; /* Ancho fijo de 400px, no crece ni encoge */
+    background-color: var(--magic-panel);
+    padding: 30px;
+    border: 1px solid var(--magic-border);
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.6), inset 0 0 15px rgba(0, 210, 255, 0.05);
+}
+
+/* Panel Derecho (Tabla) - Ocupa todo el resto del espacio */
+.der {
+    flex: 1; /* Coge todo el espacio sobrante */
+    min-width: 0; /* TRUCO CLAVE para que no se rompa el layout si la tabla es muy ancha */
+    background-color: var(--magic-panel);
+    padding: 30px;
+    border: 1px solid var(--magic-border);
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+    /* Aquí creamos la barra deslizante interna para la tabla */
+    overflow-x: auto;
+}
+
+/* --- 3. TÍTULOS Y ETIQUETAS --- */
+h2 {
+    font-family: 'Cinzel', serif;
+    color: var(--magic-white);
+    text-transform: uppercase;
+    text-align: center;
+    letter-spacing: 3px;
+    border-bottom: 1px solid var(--magic-cyan);
+    padding-bottom: 15px;
+    margin-top: 0;
+    text-shadow: 0 0 10px rgba(0, 210, 255, 0.4);
+}
+
+label {
+    font-family: 'Cinzel', serif;
+    display: block;
+    font-weight: bold;
+    margin-top: 20px;
+    color: var(--magic-cyan);
+    font-size: 0.9em;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+/* --- 4. INPUTS Y TEXTAREAS --- */
+input, textarea {
+    width: 100%;
+    padding: 12px;
+    background-color: rgba(0,0,0,0.3);
+    border: 1px solid var(--magic-border);
+    border-radius: 6px;
+    color: var(--magic-white);
+    font-family: 'Lato', sans-serif;
+    margin-top: 8px;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+}
+
+input:focus, textarea:focus {
+    outline: none;
+    border-color: var(--magic-cyan);
+    box-shadow: 0 0 15px rgba(0, 210, 255, 0.2);
+    background-color: rgba(0, 210, 255, 0.05);
+}
+
+/* --- 5. EL BOTÓN MÁGICO --- */
+button#botonMissio {
+    width: 100%;
+    margin-top: 30px;
+    padding: 15px;
+    background: transparent;
+    color: var(--magic-cyan);
+    border: 1px solid var(--magic-cyan);
+    border-radius: 6px;
+    font-family: 'Cinzel', serif;
+    font-size: 1.1em;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px rgba(0, 210, 255, 0.1);
+}
+
+button#botonMissio:hover {
+    background-color: var(--magic-cyan);
+    color: var(--magic-bg);
+    box-shadow: 0 0 20px rgba(0, 210, 255, 0.5);
+    transform: translateY(-2px);
+}
+
+/* --- 6. LA TABLA (Con scroll horizontal independiente) --- */
+table {
+    width: 100%;
+    /* Obligamos a la tabla a no encogerse, para forzar el scroll si hay mucho texto */
+    min-width: 900px;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: rgba(0,0,0,0.2);
+    border-radius: 8px;
+}
+
+thead {
+    background-color: rgba(0, 210, 255, 0.1);
+    font-family: 'Cinzel', serif;
+}
+
+th, td {
+    padding: 16px;
+    text-align: left;
+    border: none;
+    border-bottom: 1px solid var(--magic-border);
+}
+
+th {
+    color: var(--magic-cyan);
+    font-size: 0.85em;
+    letter-spacing: 1px;
+}
+
+tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+tbody tr:hover {
+    background-color: var(--magic-panel-light);
+    cursor: pointer;
+}
+
+/* Color destacado para el Itinerario */
+td:first-child {
+    color: var(--magic-white);
+    font-weight: bold;
+}
+
+/* Animación al añadir nueva fila */
+tbody tr td {
+    animation: fadeInRow 0.5s ease-out forwards;
+}
+
+@keyframes fadeInRow {
+    from { opacity: 0; transform: translateX(-10px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+/* --- 7. RUNAS NÓRDICAS DE FONDO --- */
+.runes-bg {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: -1;
+}
+
+.rune {
+    position: absolute;
+    color: var(--magic-cyan);
+    opacity: 0.1;
+    font-size: 45px;
+    font-family: 'Cinzel', serif; /* Usamos Cinzel para que parezcan más rúnicas */
+    /* Animación de flotar hacia arriba suavemente */
+    animation: runeFloatUp 25s linear infinite;
+}
+
+/* Diferentes velocidades y opacidades */
+.rune:nth-child(1) { animation-duration: 30s; opacity: 0.05; }
+.rune:nth-child(2) { animation-duration: 22s; opacity: 0.15; }
+.rune:nth-child(3) { animation-duration: 28s; opacity: 0.08; }
+.rune:nth-child(4) { animation-duration: 20s; opacity: 0.12; }
+
+@keyframes runeFloatUp {
+    0% { transform: translateY(110vh) rotate(0deg); }
+    100% { transform: translateY(-10vh) rotate(360deg); }
+}
+
+/* --- 8. RESPONSIVE --- */
+@media screen and (max-width: 1100px) {
+    #contenedor {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .izq {
+        flex: auto; /* En móvil, el formulario ocupa todo el ancho */
+    }
+}
+/* --- 1. FONDO GLOBAL ESTILO VALHALLA --- */
+body {
+    background-color: #05070a; /* Negro azulado muy profundo, como el vacío */
+    /* Degradado radial cian muy sutil en el centro para dar profundidad, inspirado en la foto */
+    background-image: radial-gradient(circle at center, rgba(0, 210, 255, 0.08), transparent 60%);
+    color: #a0b0c0; /* Plata azulada para el texto base */
+    font-family: 'Lato', sans-serif;
+    min-height: 100vh;
+    margin: 0;
+    overflow-x: hidden; /* Evita scrolls raros por las runas */
+}
+
+/* --- 7. RUNAS NÓRDICAS DE FONDO (ARREGLADO) --- */
+.runes-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none; /* Que no molesten al hacer clic */
+    z-index: -1; /* Al fondo del todo */
+    overflow: hidden; /* ¡EL CANDADO! Evita que las runas creen scroll en la página */
+}
+
+.rune {
+    position: absolute;
+    bottom: -100px; /* Empiezan escondidas por debajo del suelo */
+    color: #00d2ff;
+    font-size: 55px; /* Un poco más grandes para que destaquen */
+    font-family: 'Cinzel', serif;
+    text-shadow: 0 0 15px rgba(0, 210, 255, 0.8);
+    opacity: 0; /* Empiezan invisibles */
+    animation: runeFantasy linear infinite;
+}
+
+/* Diferentes posiciones, tiempos y retrasos para que no suban todas a la vez */
+.rune:nth-child(1) { left: 10%; animation-duration: 25s; animation-delay: 0s; }
+.rune:nth-child(2) { left: 40%; animation-duration: 20s; animation-delay: 5s; }
+.rune:nth-child(3) { left: 70%; animation-duration: 28s; animation-delay: 10s; }
+.rune:nth-child(4) { left: 85%; animation-duration: 22s; animation-delay: 2s; }
+/* Si pones más runas en tu HTML, puedes añadir :nth-child(5), etc. */
+
+@keyframes runeFantasy {
+    0% {
+        transform: translateY(0) rotate(0deg) scale(0.8);
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.15; /* Aparecen suavemente */
+    }
+    90% {
+        opacity: 0.15; /* Mantienen el brillo durante el viaje */
+    }
+    100% {
+        transform: translateY(-120vh) rotate(360deg) scale(1.2); /* Suben más allá del techo y giran */
+        opacity: 0; /* Desaparecen suavemente al final */
+    }
+}
+/* --- 4. INPUTS Y TEXTAREAS CON REACCIÓN --- */
+input, select, textarea {
+    width: 100%;
+    padding: 12px;
+    background-color: rgba(0,0,0,0.5); /* Más oscuro para que contraste con el fondo */
+    border: 1px solid #233554; /* Borde azul grisáceo sutil */
+    border-radius: 6px;
+    color: #e6f0fa; /* Blanco hielo */
+    font-family: 'Lato', sans-serif;
+    margin-top: 8px;
+    box-sizing: border-box;
+    transition: all 0.3s ease; /* Animación suave para todas las propiedades */
+}
+
+/* Efecto al pasar el cursor (Hover) */
+input:hover, select:hover, textarea:hover {
+    border-color: rgba(0, 210, 255, 0.5); /* El borde se ilumina a medio gas */
+    background-color: rgba(0, 210, 255, 0.03); /* Un toque cian de fondo */
+}
+
+/* Efecto al hacer clic/foco */
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: #00d2ff; /* Borde cian brillante a tope */
+    box-shadow: 0 0 15px rgba(0, 210, 255, 0.3); /* Brillo rúnico alrededor */
+    background-color: rgba(0, 210, 255, 0.05);
+}
+
+/* --- 3. TÍTULOS Y ETIQUETAS ANIMADOS --- */
+h2 {
+    font-family: 'Cinzel', serif;
+    color: #e6f0fa;
+    text-transform: uppercase;
+    text-align: center;
+    letter-spacing: 3px;
+    border-bottom: 1px solid #00d2ff;
+    padding-bottom: 15px;
+    margin-top: 0;
+    /* Aplicamos la animación de latido al título */
+    animation: brilloLatido 3s ease-in-out infinite alternate;
+}
+
+/* Animación: El título respira luz */
+@keyframes brilloLatido {
+    from {
+        text-shadow: 0 0 5px rgba(0, 210, 255, 0.5), 0 0 10px rgba(0, 210, 255, 0.3);
+    }
+    to {
+        text-shadow: 0 0 10px #00d2ff, 0 0 20px #00d2ff, 0 0 30px rgba(0, 210, 255, 0.6);
+    }
+}
+
+label {
+    font-family: 'Cinzel', serif;
+    display: block;
+    font-weight: bold;
+    margin-top: 20px;
+    color: #00d2ff;
+    font-size: 0.9em;
+    text-transform: uppercase;
+    letter-spacing: 2px; /* Separación normal */
+    transition: all 0.3s ease; /* Transición suave para el hover */
+}
+
+/* EFECTO MAGIA: Al pasar el ratón, las letras brillan y se separan */
+label:hover {
+    color: #ffffff; /* Se vuelve blanco puro */
+    letter-spacing: 4px; /* Las letras se estiran */
+    text-shadow: 0 0 10px #00d2ff, 0 0 20px #00d2ff; /* Brillo intenso */
+    cursor: default;
+}
+/* Posiciones, tamaños y tiempos para 8 runas */
+.rune:nth-child(1) { left: 5%;  animation-duration: 22s; animation-delay: 0s; font-size: 40px; }
+.rune:nth-child(2) { left: 18%; animation-duration: 28s; animation-delay: 4s; font-size: 55px; }
+.rune:nth-child(3) { left: 28%; animation-duration: 20s; animation-delay: 8s; font-size: 35px; }
+.rune:nth-child(4) { left: 42%; animation-duration: 26s; animation-delay: 2s; font-size: 60px; }
+.rune:nth-child(5) { left: 55%; animation-duration: 24s; animation-delay: 12s; font-size: 45px; }
+.rune:nth-child(6) { left: 70%; animation-duration: 30s; animation-delay: 6s; font-size: 50px; }
+.rune:nth-child(7) { left: 85%; animation-duration: 21s; animation-delay: 1s; font-size: 38px; }
+.rune:nth-child(8) { left: 95%; animation-duration: 27s; animation-delay: 10s; font-size: 52px; }
+
+.aceptar{
+    background-color: green;
+    width: 20px;
+    height: 20px;
+}
+
+.eliminar{
+    background-color: red;
+    width: 20px;
+    height: 20px;
+}

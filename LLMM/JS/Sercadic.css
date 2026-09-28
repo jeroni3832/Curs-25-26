@@ -1,0 +1,13 @@
+#container {
+
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 50px;
+    justify-items: center;
+    
+}
+.caixa{
+   
+      
+    border: solid black 1px;
+}

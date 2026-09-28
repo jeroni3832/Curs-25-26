@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mini practica</title>
+    <link rel="stylesheet" href="practica_js.css">
+</head>
+<body>
+<div id="contenedor">
+    <div class="izq">
+        <h2 id="titol">Afegir tasques</h2>
+        <form id="form">
+            <label for="nomTasca">Nom de la tasca:</label>
+            <input type="text" id="nomTasca" name="nom">
+
+            <label for="descripcio">Descripció:</label>
+            <textarea id="descripcio" name="descripcio" rows="3"></textarea>
+
+            <label for="datein">Data d'inici:</label>
+            <input type="date" id="datein">
+
+            <label for="datefi">Data de finalització:</label>
+            <input type="date" id="datefi">
+
+            <button id="boton" type="button" value="Entregar"> Envia </button>
+        </form>
+    </div>
+
+    <div class="der">
+        <h2>Llista de tasques</h2>
+        <table id="resultat">
+            <thead>
+            <tr>
+                <th>Tasca</th>
+                <th>Descripció</th>
+                <th>Inici</th>
+                <th>Fi</th>
+            </tr>
+            </thead>
+            <tbody id="llistaTasques">
+
+            </tbody>
+        </table>
+    </div>
+</div>
+<script src="practica_js.js"></script>
+</body>
+</html>

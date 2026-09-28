@@ -1,0 +1,79 @@
+/* 1. Estilo general: para que todo se vea limpio */
+body {
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background-color: #e0eafc; /* Un azulito muy claro tipo cielo */
+    background: linear-gradient(to right, #e0eafc, #cfdef3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+/* 2. El contenedor (tu clase .inner) */
+.inner {
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); /* Sombra suave para que flote */
+    text-align: center;
+    max-width: 350px;
+    width: 100%;
+}
+
+/* 3. El título o etiquetas */
+label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
+    color: #444;
+}
+
+/* 4. El input: redondo y elegante */
+input {
+    padding: 12px;
+    border: 2px solid #eee;
+    border-radius: 10px;
+    width: 80%;
+    margin-bottom: 15px;
+    outline: none;
+    transition: border 0.3s;
+}
+
+input:focus {
+    border-color: #74b9ff; /* Se ilumina al hacer clic */
+}
+
+/* 5. El botón: con un azul llamativo */
+button {
+    background-color: #0984e3;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: transform 0.2s, background 0.3s;
+}
+
+button:hover {
+    background-color: #74b9ff;
+    transform: scale(1.05); /* Se hace un pelín más grande al pasar el ratón */
+}
+
+/* 6. El texto del clima (#info) */
+#info {
+    margin-top: 25px;
+    font-size: 1.1rem;
+    color: #2d3436;
+    line-height: 1.6;
+}
+
+/* 7. La imagen (#sol): el toque final */
+#sol {
+    width: 120px;
+    height: auto;
+    display: block;
+    margin: 20px auto 0; /* Centrada y con espacio arriba */
+    filter: drop-shadow(0 5px 15px rgba(0,0,0,0.1)); /* Sombra a la propia imagen */
+}

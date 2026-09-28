@@ -1,0 +1,98 @@
+/* Centrado del cuerpo */
+body {
+    background-color: #f4f7f6;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Alinea arriba para que no flote en medio si hay poco contenido */
+    min-height: 100vh;
+    margin: 0;
+    padding-top: 50px;
+}
+
+#contenedor { 
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between; /* Deja espacio entre los dos bloques */
+    width: 90%; /* El contenedor ocupa casi todo el ancho de la pantalla */
+    max-width: 1200px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+/* --- REQUISITOS DE LA IMAGEN --- */
+
+.izq {
+    width: 35%; /* Exacto como pide la imagen */
+    display: flex;
+    flex-direction: column;
+    padding-right: 20px;
+    border-right: 1px solid #eee; /* Una línea sutil para separar */
+}
+
+.der {
+    width: 55%; /* Exacto como pide la imagen */
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- ESTILO VISUAL --- */
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+input, textarea {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+input[type="button"] {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 12px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s;
+}
+
+input[type="button"]:hover {
+    background-color: #2980b9;
+}
+
+/* Estilo de la tabla para que se vea profesional */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+th, td {
+    text-align: left;
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+}
+
+th {
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+/* --- RESPONSIVE (Móviles) --- */
+@media (max-width: 768px) {
+    #contenedor {
+        flex-direction: column;
+        width: 95%;
+    }
+    .izq, .der {
+        width: 100%; /* En móvil ignoramos los porcentajes para que quepa bien */
+        border-right: none;
+        padding: 10px 0;
+    }
+}

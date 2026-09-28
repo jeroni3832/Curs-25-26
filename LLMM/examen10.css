@@ -1,0 +1,21 @@
+ul{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    }
+     
+    li{
+        list-style: none;
+        
+    }
+    a{
+        text-decoration: none;
+        color: black;
+    }
+
+    
+    a:visited{
+        color:yellow;
+    }
+    a:hover{
+        color: green;}
