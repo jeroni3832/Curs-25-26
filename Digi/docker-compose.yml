@@ -1,0 +1,9 @@
+version: '3.8'
+
+services:
+  mi-servidor-web:  # Nombre del servicio (puedes cambiarlo)
+    image: nginx    # La imagen que quieres usar
+    container_name: multi-port # El nombre que tendrá el contenedor
+    ports:
+      - "8080:80"   # Puerto de tu PC : Puerto del contenedor
+      - "8443:443"  # Segundo puerto
